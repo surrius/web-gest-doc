@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	    <title>Web Gestor Documental</title>
+	    <!-- ************* FUENTE CUSTOM ************* -->
+	    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">  
+	
+	    <!-- ************* ESTILOS CSS ************* -->
+	    <!-- Bootstrap -->
+	    <link href="../css/bootstrap.min.css" rel="stylesheet">    
+	    <!-- CSS Fancybox del plugin de la tabla	-->
+	    <link href="../css/fancy.min.css" rel="stylesheet">
+	    
+	    <!-- CSS de la Web 	-->
+	    <link href="../css/gestdoc.css" rel="stylesheet">
+	    
+	    <!-- ************* JAVASCRIPT ************* -->
+	    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	    <script src="../js/jquery-3.2.1.min.js"></script>
+	    <!-- BootStrap -->
+	    <script src="../js/bootstrap.min.js"></script>
+	    <!--  JavaScript Fancybox del plugin de la tabla -->
+		<script src="../js/fancy.min.js"></script>
+		
+	    <!-- Código JavaScript propio de la aplicación -->
+	    <script src="../js/gestdoc.js"></script>
+    </head>
+
+	<body>
+		<!--	VENTANAS MODALES 		-->
+		<div class="modal fade" id="consultaModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="consultaModalTitulo">Consulta JOBNAME_PRUEBAS_1</h4>
+					</div>
+					<div class="modal-body">
+						<form id="frmConsulta">
+							<fieldset disabled>
+								<div class="row form-group form-group-sm">
+									<div class="col-sm-4">
+										<label for="frmAltNombre">Nombre</label> 
+										<input type="text" class="form-control" id="frmConNombre" value="TDBMPlanificador.sh">
+									</div>
+									<div class="col-sm-4">
+										<label for="frmConMaqOrigen">Máquina origen</label> 
+										<input type="text" class="form-control" id="frmConMaqOrigen" value="spnac006">
+									</div>
+									<div class="col-sm-4">
+										<label for="frmConLibOrigen">Librería origen</label>
+										<input type="text" class="form-control"	id="frmConLibOrigen" value="/pr/tdbm/batch/es/scrt">
+									</div>
+								</div>
+								<div class="row form-group form-group-sm">
+									<div class="col-sm-12">
+										<label for="frmConDesc">Descripción</label> 
+										<textarea  rows="15" class="form-control" id="frmConDesc">
+Procesos de creación de tareas planificadas y gestión de alertas:
+/pr/tdbm/batch/es/scrt/TDBMPlanificador.sh.
+
+Ejecuta la clase Java TDMBPlanificador.java, la cual se ubica dentro de TDMBPlanificador.jar.
+
+Genera dos ficheros logs:
+
+Proceso Shell Script: /pr/tdbm/batch/es/logs/TDBMPlanificadorSH.log
+Proceso Java: /pr/tdbm/batch/es/logs/TDBMPlanificadorBatch.log
+
+Pasos del proceso:
+
+1. Generación de Tareas:
+1.1 Actualización y consulta de pretareas.
+1.2 Consulta de documentos asociado a la pretarea.
+1.3 Copia de documentos en Livelink.
+1.4 Consulta de datos para creación de tarea MQ Workflow.
+1.5 Creación de tarea MQ Workflow.
+1.6 Actualización expediente, documentos y pretarea.
+1.7 Control de Errores:
+1.7.1 Actualizar pretarea como fallida.
+1.7.2 Eliminar tarea MQ Workflow.
+1.7.3 Marcha atrás en base de datos.
+2. Generación de Alertas:
+2.1 Eliminación de alertas antiguas.
+2.2 Alta de alertas de pretareas fallidas.
+3. Generación de correos electrónicos:
+3.1 Consulta de alertas.
+3.2 Generación del correo electrónico.
+										</textarea>										
+									</div>
+								</div>
+								<div class="row form-group form-group-sm">
+									<div class="col-sm-4">
+										<label for="frmConEstructura">Estructura</label> 
+										<input type="text" class="form-control" id="frmConEstructura" value="TDBM_PLANIF">
+									</div>
+									<div class="col-sm-4">
+										<label for="frmConSoporte">Grupo de Soporte</label> 
+										<input type="text" class="form-control" id="frmConSoporte" value="RA DISTRIBUIDOS">
+									</div>
+									<div class="col-sm-4">
+										<label for="frmConMaqEjec">Máquina de ejecución</label> 
+										<input type="text" class="form-control" id="frmConMaqEjec" value="spnac009">
+									</div>
+								</div>
+								<div class="row form-group form-group-sm">
+									<div class="col-sm-6">
+										<label for="frmConCriticidad">Criticidad / Acciones</label> 
+										<input type="text" class="form-control" id="frmConCriticidad" 
+										value="Relanzar Job si el código de retorno es N, y si falla, Llamada y Remedy">
+									</div>
+								</div>
+								<div class="row form-group form-group-sm">
+									<div class="col-sm-12">
+										<label for="frmConReglas">Reglas de Planificación/Periodicidad</label> 
+										<textarea  rows="3" class="form-control" id="frmConReglas">
+El proceso TDBMPlanificador.sh se ejecutará 6 veces, lanzándose a las 8:00, 10:00, 12:00, 15:00, 17:00 h y 19:00 horas.
+										</textarea>
+									</div>
+								</div>
+								<label>Descripción de pasos:</label> 
+								<table id="jobsDescPasos" class="table table-striped table-bordered">
+								<thead>
+									<tr>
+										<th class="col-sm-1 celda-vacia"></th>
+										<th colspan="2" class="col-sm-5">FICHEROS</th>
+										<th colspan="2" class="col-sm-5">BASE DE DATOS</th>
+									</tr>
+									<tr>
+										<th>PASO</th>
+										<th>ENTRADA</th>
+										<th>SALIDA</th>
+										<th>ENTIDADES</th>
+										<th>TIPO DE ACCESO</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>1</td>
+										<td></td>
+										<td></td>
+										<td>
+										TDBM.TTDBMALE
+										TDBM.TTDBMPTA
+										TDBM.TTDBMPTA
+										</td>
+										<td>
+										Selección
+										Modificación
+										Selección
+										</td>
+									</tr>
+									<tr>
+										<td>1.1</td>
+										<td></td>
+										<td>
+										Documento descargado, renombrado y posteriormente dado de alta en Livelink.
+										</td>
+										<td>
+										TDBM.TTDBMFBC
+										TDBM.TTDBMDSR
+										TDBM.TTDBMHDS
+										TDBM.TTDBMEDO
+										TDBM.TTDBMDBC
+										TDBM.TTDBMPER
+										</td>
+										<td>
+										Selección
+										Selección
+										Selección
+										Selección
+										Selección
+										Selección
+										</td>
+									</tr>
+									<tr>
+										<td>2</td>
+										<td>
+										Documento entrada prueba, texto.
+										</td>
+										<td>
+										Fichero auxiliar que se adjunta a la incidencia.
+										</td>
+										<td>
+										</td>
+										<td>
+										</td>
+									</tr>
+									<tr>
+										<td>3</td>
+										<td></td>
+										<td></td>
+										<td>
+										TDBM.TTDBMALE
+										TDBM.TTDBMPTA
+										TDBM.TTDBMPTA
+										</td>
+										<td>
+										Selección
+										Modificación
+										Selección
+										</td>
+									</tr>
+									<tr>
+										<td>3.1</td>
+										<td></td>
+										<td></td>
+										<td>
+										TDBM.TTDBMALE
+										TDBM.TTDBMPTA
+										TDBM.TTDBMPTA
+										</td>
+										<td>
+										Selección
+										Modificación
+										Selección
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<table id="jobsRearranques" class="table table-striped table-bordered">
+								<thead>
+									<tr>
+										<th class="col-sm-1">PASO</th>
+										<th class="col-sm-3">PREDECESORES</th>
+										<th class="col-sm-3">SUCESORES</th>
+										<th class="col-sm-5">NORMAS DE REARRANQUE</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>1</td>
+										<td>PRE_ZZPRUEBA_JOB_1</td>
+										<td>SUC_ZZPRUEBA_JOB_2</td>
+										<td>Texto fijo de pruebas para norma de rearranque</td>
+									</tr>
+									<tr>
+										<td>2</td>
+										<td>PRE_YYYUEBA_JOB_1</td>
+										<td>SUC_YYYRUEBA_JOB_2</td>
+										<td>Texto fijo de pruebas para norma de rearranque</td>
+									</tr>
+									<tr>
+										<td>3</td>
+										<td>PRE_ZZPRUEBA_JOB_1</td>
+										<td>SUC_ZZPRUEBA_JOB_2</td>
+										<td>Texto fijo de pruebas para norma de rearranque</td>
+									</tr>
+									<tr>
+										<td>4</td>
+										<td>PRE_ZZPRUEBA_JOB_1</td>
+										<td>SUC_ZZPRUEBA_JOB_2</td>
+										<td>Texto fijo de pruebas para norma de rearranque</td>
+									</tr>
+								</tbody>
+							</table>
+							<table id="jobsIncompatibilidades" class="table table-striped table-bordered">
+								<thead>
+									<tr>
+										<th class="col-sm-1">PASO</th>
+										<th class="col-sm-8">INCOMPATIBILIDADES</th>
+										<th class="col-sm-3">CRITICIDAD</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>1</td>
+										<td>Incompatibilidad 1</td>
+										<td>Criticidad 1</td>
+									</tr>
+									<tr>
+										<td>2</td>
+										<td>Incompatibilidad 2</td>
+										<td>Criticidad 2</td>
+									</tr>
+									<tr>
+										<td>3</td>
+										<td>Incompatibilidad 3</td>
+										<td>Criticidad 3</td>
+									</tr>
+								</tbody>
+							</table>
+							</fieldset>
+						</form>
+					</div>
+					<div class="modal-footer alinea-centro">
+						<button type="button" class="btn btn-default" data-dismiss="modal"><strong>Cerrar</strong></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	<!--	CABECERA DE LA PAGINA 		-->
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6">
+					<img class="" src="../img/logo.png">
+					<h3 class="titulo-web">Gestor Documental Batch</h3>
+				</div>
+				<div class="col-sm-6">
+					<h4 class="prueba1">
+						Bienvenido,
+						<strong class="">Usuario</strong>
+						<button type="button" class="btn btn-danger">Logout</button>
+						<button type="button" class="btn btn-primary">Ayuda</button>
+					</h4>
+				</div>
+			</div>
+			<br>
+		</div>
+
+		<!--	BARRA DE NAVEGACION 		-->
+		<nav class="navbar-inverse">
+			<ul class="nav nav-justified">
+		      <li id="nav_consulta" class="active-nav"><span>CONSULTA</span></li>
+		      <li id="nav_alta"><span>ALTA</span></li>
+		      <li id="nav_modifica"><span>MODIFICACION</span></li>
+		      <li id="nav_baja"><span>BAJA</span></li>
+		    </ul>
+		</nav>
+		
+		<!--	AREA DE SELECCIÓN DE APLICACIONES, CADENAS O JOBS 		-->
+<!-- 		<div class="container alinea-centro"> -->
+<!-- 			<h3 class="text-muted">Seleccione documento a tratar</h3> -->
+<!-- 			<div id="radioTipo" data-toggle="buttons"> -->
+<!-- 				<label class="btn btn_tipo"> -->
+<!-- 					<input type="radio" id="btnAplicaciones" autocomplete="off" checked> APLICACIONES -->
+<!-- 				</label> -->
+<!-- 				<label class="btn btn_tipo"> -->
+<!-- 					<input type="radio" id="btnCadenas" autocomplete="off"> CADENAS -->
+<!-- 				</label> -->
+<!-- 				<label class="btn btn_tipo"> -->
+<!-- 					<input type="radio" id="btnJobs" autocomplete="off"> JOBS -->
+<!-- 				</label> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+		<div id="contentImagenes" class="container alinea-centro">
+			<div class="col-xs-4 col-sm-4 circular">
+				<img src="../img/aplicacion.png" alt="Aplicaciones" class="img-circular">
+				<h3>APLICACIONES</h3>
+			</div>
+			<div class="col-xs-4 col-sm-4 circular">
+				<img src="../img/cadena.png" alt="Cadenas" class="img-circular">
+				<h3>CADENAS</h3>
+			</div>
+			<div class="col-xs-4 col-sm-4 circular">
+				<img src="../img/job.png" alt="Jobs" class="img-circular">
+				<h3>JOBS</h3>
+			</div>
+		</div>
+<!-- 		<br> -->
+		
+		<!--	FORMULARIO DE BUSQUEDA PARA LAS CONSULTAS 		-->
+		<div id="areaBusca" class="container" style="display: none">
+			<br>
+			<form id="frmBuscaJob">
+				<fieldset id="fieldBusca" class="the-fieldset well">
+  					<legend class="the-legend text-muted">
+						Rellene los campos de la consulta
+  					</legend>
+					<div class="row form-group form-group-sm">
+						<div class="col-sm-3">
+							<label for="frmBuscaJobJobname">Jobname</label>
+							<input type="text" class="form-control" id="frmBuscaJobJobname">
+						</div>
+						<div class="col-sm-3">
+							<label for="frmBuscaJobGrupo">Grupo de Soporte</label>
+							<select id="frmBuscaJobGrupo" class="form-control">
+								<option>Seleccione Grupo...</option>
+								<option>RA DISTRIBUIDOS</option>
+								<option>RA HOST</option>
+								<option>HERRAMIENTAS PRODUCCION</option>
+								<option>...</option>
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<label for="frmBuscaJobNombre">Nombre</label>
+							<input type="date" class="form-control" id="frmBuscaJobNombre">
+						</div>
+						<div class="col-sm-3">
+							<label for="frmBuscaJobMaqOr">Maquina origen</label>
+							<input type="date" class="form-control" id="frmBuscaJobMaqOr">
+						</div>
+					</div>
+					<div class="row form-group form-group-sm">
+						<div class="col-sm-2">
+							<button type="button" class="pull-left btn btn-primary">Limpiar</button>
+						</div>
+						<div class="col-sm-offset-8 col-sm-2">
+							<button id="frmBuscaJobBtnBusca" type="button" class="pull-right btn btn-success">Buscar</button>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+		
+		<!--	FORMULARIO DE ALTA/MODIFICACION	DE JOBS		-->
+		<div id="areaAlta" class="container" style="display: none">
+			<br>
+			<form id="frmAltaJobs">
+				<fieldset id="fieldAlta" class="the-fieldset well">
+  					<legend class="the-legend text-muted">
+						Formulario de alta de Jobs
+  					</legend>
+					<div class="row form-group form-group-sm">
+						<div class="col-sm-4">
+							<label for="frmAltJobname">JobName</label> 
+							<input type="text" class="form-control" id="frmAltJobname">
+						</div>
+					</div>
+					<div class="row form-group form-group-sm">
+						<div class="col-sm-4">
+							<label for="frmAltNombre">Nombre</label> 
+							<input type="text" class="form-control" id="frmAltNombre">
+						</div>
+						<div class="col-sm-4">
+							<label for="frmAltMaqOrigen">Máquina origen</label> 
+							<input type="text" class="form-control" id="frmAltMaqOrigen">
+						</div>
+						<div class="col-sm-4">
+							<label for="frmAltLibOrigen">Librería origen</label> 
+							<input type="text" class="form-control" id="frmAltLibOrigen">
+						</div>
+					</div>
+					<div class="row form-group form-group-sm">
+						<div class="col-sm-12">
+							<label for="frmAltDesc">Descripción</label>
+							<textarea rows="5" class="form-control" id="frmAltDesc"></textarea>
+						</div>
+					</div>
+					<div class="row form-group form-group-sm">
+						<div class="col-sm-4">
+							<label for="frmAltEstructura">Estructura</label> 
+							<input type="text" class="form-control" id="frmAltEstructura">
+						</div>
+						<div class="col-sm-4">
+							<label for="frmAltSoporte">Grupo de Soporte</label> 
+							<select id="frmAltSoporte" class="form-control">
+								<option>Seleccione Grupo...</option>
+								<option>RA DISTRIBUIDOS</option>
+								<option>RA HOST</option>
+								<option>HERRAMIENTAS PRODUCCION</option>
+								<option>...</option>
+							</select>
+						</div>
+						<div class="col-sm-4">
+							<label for="frmAltMaqEjec">Máquina de ejecución</label> 
+							<input type="text" class="form-control" id="frmAltMaqEjec">
+						</div>
+					</div>
+					<div class="row form-group form-group-sm">
+						<div class="col-sm-6">
+							<label for="frmAltCriticidad">Criticidad / Acciones</label>
+							<select id="frmAltCriticidad" class="form-control">
+								<option value="">Seleccione opcion...</option>
+								<option value="">Aviso inmediato (Llamada y Remedy)</option>
+								<option value="">Aviso al día siguiente y Aviso al día siguiente incluso si es festivo (Remedy)</option>
+								<option value="">Relanzar Job (Rerun), y si falla, Llamada y Remedy</option>
+								<option value="">Relanzar Job (Rerun), y si falla, Remedy</option>
+								<option value="1">Relanzar Job si el código de retorno es N, y si falla, Llamada y Remedy</option>
+								<option value="1">Relanzar Job si el código de retorno es N, y si falla, Remedy</option>
+								<option value="1">Relanzar Job si el código de retorno es distinto de N, y si falla, Llamada y Remedy</option>
+								<option value="1">Relanzar Job si el código de retorno es distinto de N, y si falla, Remedy</option>
+								<option value="">Liberar sucesores / Force OK / Dar por terminado, y si falla, Llamada y Remedy</option>
+								<option value="">Liberar sucesores / Force OK / Dar por terminado, y si falla, Remedy</option>
+								<option value="1">Liberar sucesores / Force OK / Dar por terminado si el código de retorno es N, y si falla, Llamada y Remedy</option>
+								<option value="1">Liberar sucesores / Force OK / Dar por terminado si el código de retorno es N, y si falla, Remedy</option>
+								<option value="1">Liberar sucesores / Force OK / Dar por terminado si el código de retorno es distinto de N, y si falla, Llamada y Remedy</option>
+								<option value="1">Liberar sucesores / Force OK / Dar por terminado si el código de retorno es distinto de N, y si falla, Remedy</option>
+							</select>
+						</div>
+						<div id="campoCriticidad" class="col-sm-3" style="display: none">
+							<label for="frmAltRC">Valor Codigo de Retorno (N)</label>
+							<input type="text" class="form-control" id="frmAltRC">
+						</div>
+					</div>
+					<div class="row form-group form-group-sm">
+						<div class="col-sm-12">
+							<label for="frmAltReglas">Reglas de Planificación/Periodicidad</label>
+							<textarea rows="3" class="form-control" id="frmAltReglas"></textarea>
+						</div>
+					</div>
+					<label>Descripción de pasos:</label>
+					<table id="jobsDescPasos" class="table table-striped table-bordered">
+						<thead>
+							<tr>
+								<th class="col-sm-1 celda-vacia"></th>
+								<th colspan="2" class="col-sm-5">FICHEROS</th>
+								<th colspan="2" class="col-sm-5">BASE DE DATOS</th>
+							</tr>
+							<tr>
+								<th>PASO</th>
+								<th>ENTRADA</th>
+								<th>SALIDA</th>
+								<th>ENTIDADES</th>
+								<th>TIPO DE ACCESO</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+					<table id="jobsRearranques"
+						class="table table-striped table-bordered">
+						<thead>
+							<tr>
+								<th class="col-sm-1">PASO</th>
+								<th class="col-sm-3">PREDECESORES</th>
+								<th class="col-sm-3">SUCESORES</th>
+								<th class="col-sm-5">NORMAS DE REARRANQUE</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+					<table id="jobsIncompatibilidades"
+						class="table table-striped table-bordered">
+						<thead>
+							<tr>
+								<th class="col-sm-1">PASO</th>
+								<th class="col-sm-8">INCOMPATIBILIDADES</th>
+								<th class="col-sm-3">CRITICIDAD</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="row form-group form-group-sm">
+						<div class="col-sm-3">
+							<button type="button" class="pull-left btn btn-primary">Limpiar</button>
+						</div>
+						<div class="col-sm-offset-6 col-sm-3">
+							<button id="frmAltaBtnOK" type="button" class="pull-right btn btn-success">Aceptar</button>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+		
+		<!--	TABLA CREADA CON EL PLUGIN FANCYBOX		-->
+		<div class="container">
+<!-- 			<div id="tbFindForm"></div> -->
+<!-- 			<br> -->
+			<div id="tbDatos" style="width:100%;margin-top: -6px;"></div>
+		</div>
+		<br>
+			
+		<!--	PIE DE PÁGINA INFORMATIVO DE LA APLICACION		-->
+		<footer class="footer">
+			<div class="container-fluid">
+				<p>
+					&copy; BBVA - Gestor Documental Batch 
+					<br>
+					Site creado por <strong>SW Life Cycle and Prod. Tools</strong>
+				</p>
+			</div>
+		</footer>
+	</body>
+</html>
